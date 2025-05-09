@@ -328,10 +328,22 @@ resource "aws_instance" "example" {
 ### Using Terraform Modules
 
 - Modules can take input and provide output to integrate with the main code.
+- Local modules source address must begin with ./ or ../ to avoid confusion with a registry path
+- Variables must be explicitly declared in the module definition fromthe roor module
+- Providers only need to be explicitly declared if using aliases - default provider is implicitly inherited
 
 ### Declaring Modules in Code
 
 - Module inputs are named parameters passed inside the module block and used as variables inside the module code.
+
+### Private Registry Modules
+
+- Private registry modules have source strings of the form <HOSTNAME>/<NAMESPACE>/<NAME>/<PROVIDER>. This is the same format as the public registry, but with an added hostname prefix.
+
+### Public Registry Modules
+
+- Module GitHub repositories must use this three-part name format: terraform-<PROVIDER>-<NAME>, where the <NAME> segment can contain additional hyphens.
+- The module must be on a public GitHub repo with at least one release tag in x.y.z format.
 
 ### Terraform Module Outputs
 
@@ -440,6 +452,7 @@ Examples of Terraform built-in functions:
   - When needing to manage existing resources not originally created by Terraform.
   - When creation of new resources is not permitted.
   - When not in control of the initial infrastructure creation process.
+  - IMPORTANT - Not all providers and resources support Terraform import.
 
 ### Terraform validate
 
