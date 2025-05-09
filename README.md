@@ -191,7 +191,6 @@ These commands are used to manipulate and interact with the Terraform state file
 | `terraform state pull`             | Retrieves the state file from its remote storage location          | Use to download and view the current remote state              |
 | `terraform state push`             | Uploads a local state file to the configured remote state location | Used to manually synchronize the local state with remote state |
 | `terraform state replace-provider` | Replaces provider references in the state file                     | Useful when changing providers or their versions               |
-| `terraform state show`             | Shows attributes of a single resource in the state                 | Inspect detailed information about a specific resource         |
 
 ## Variables
 
