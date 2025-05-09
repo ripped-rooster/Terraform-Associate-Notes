@@ -115,7 +115,7 @@ This repository contains notes for the HashiCorp Certified: Terraform Associate 
 - By default, Terraform looks for providers in the Terraform Providers Registry ([Terraform Providers Registry](https://registry.terraform.io/browse/providers)).
 - Providers are plugins released independently of Terraform's core software, with their own versioning.
 - Custom providers can be written if needed (beyond the scope of certification).
-- During initialization (via `terraform init`), Terraform finds and installs providers.
+- During initialization (via `terraform init`), Terraform finds and installs providers.  You don't have to manually add them, as long as a resource from that provider has been added prior to init.
 - Best practice: Providers should be pinned to a specific version to avoid breaking changes.
 
 ### Terraform Resources
