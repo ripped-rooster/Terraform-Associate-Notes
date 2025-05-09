@@ -320,6 +320,10 @@ resource "aws_instance" "example" {
   - `for_each`
   - `providers`
   - `depends_on`
+  - 
+### Module Versioning
+
+- Local modules can't have version because the version is in the code, only registry modules have versions
 
 ### Using Terraform Modules
 
