@@ -169,6 +169,7 @@ data "<PROVIDER>_<DATA_SOURCE_TYPE>" "<NAME>" {
 
 - Saves the Terraform state file locally on your system.
 - This is Terraform's default behavior.
+- Local state is stored in plain text JSON files
 
 ### Remote State Storage
 
@@ -177,6 +178,7 @@ data "<PROVIDER>_<DATA_SOURCE_TYPE>" "<NAME>" {
 - Remote state is accessible to multiple teams for collaboration.
 - Enables state locking to prevent coinciding parallel executions.
 - Supports sharing "output" values with other Terraform configurations or code.
+- Remote state can provide better security as it is only held in memory and CAN be encrypted at rest
 
 ### Terraform State Commands
 
@@ -211,6 +213,7 @@ These commands are used to manipulate and interact with the Terraform state file
 
 - Sensitive variables are used to handle sensitive information such as passwords, API keys, or any confidential data. Marking a variable as sensitive prevents its value from being displayed in the Terraform output logs, thus helping to secure sensitive data.
 - **Usage**: Use the `sensitive` argument to mark a variable as sensitive.
+- Should be noted that a provider error could still expose sensitive data if the value is included in the error message
 
 ```hcl
 variable "db_password" {
