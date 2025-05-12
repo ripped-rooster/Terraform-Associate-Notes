@@ -349,6 +349,7 @@ resource "aws_instance" "example" {
 
 - Outputs declared inside module code can feed back into the root module or main code.
 - Output convention: `module.<name-of-module>.<name-of-output>`
+- Output convention for nested modules: `module.<name-of-module>.module.<name-of-nested-module>.<name-of-output>`
 
 ## Terraform Built-in Functions
 
