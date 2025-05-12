@@ -354,7 +354,7 @@ resource "aws_instance" "example" {
 
 - Modules can take input and provide output to integrate with the main code.
 - Local modules source address must begin with ./ or ../ to avoid confusion with a registry path
-- Variables must be explicitly declared in the module definition fromthe roor module
+- Variables must be explicitly declared in the module definition fromthe root module
 - Providers only need to be explicitly declared if using aliases - default provider is implicitly inherited
 
 ### Declaring Modules in Code
@@ -367,7 +367,7 @@ resource "aws_instance" "example" {
 - To access a module in a separaet private git repository, you need to use `git::` - these are the syntax options:
 ```hcl
 module "instances" {
-  source = "ssh://username@code.quizexperts.com:instances.git"
+  source = "git::ssh://username@code.quizexperts.com:instances.git"
 }
 module "vpc" {
   source = "git::https://example.com/vpc.git"
