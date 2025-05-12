@@ -344,6 +344,12 @@ resource "aws_instance" "example" {
 ### Private Registry Modules
 
 - Private registry modules have source strings of the form <HOSTNAME>/<NAMESPACE>/<NAME>/<PROVIDER>. This is the same format as the public registry, but with an added hostname prefix.
+- To access a module in a separaet private git repository, this is the syntax:
+```hcl
+module "instances" {
+  source = "ssh://username@code.quizexperts.com:instances.git"
+}
+```
 
 ### Public Registry Modules
 
