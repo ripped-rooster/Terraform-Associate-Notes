@@ -348,8 +348,15 @@ resource "aws_instance" "example" {
 ### Terraform Module Outputs
 
 - Outputs declared inside module code can feed back into the root module or main code.
-- Output convention: `module.<name-of-module>.<name-of-output>`
+- If the module change is in a branch called `hotfix` the module source value should be: `source = "git::https://my.moduleregistryurl.com/my-module.git?ref=hotfix"`
+- The `ref` key is the important bit here as it sets the branch name.  Tag names can also be set here as well as branches
+
+### Terraform Module Testing
+
+- If you have a module in a registry and you want to test and changes, you can do this without merging it to main and can test the module branch first
+- Using the source : `module.<name-of-module>.<name-of-output>`
 - Output convention for nested modules: `module.<name-of-module>.module.<name-of-nested-module>.<name-of-output>`
+
 
 ## Terraform Built-in Functions
 
