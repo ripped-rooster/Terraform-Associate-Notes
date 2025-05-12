@@ -259,6 +259,8 @@ variable "port" {
 | Object   | A collection of named attributes        | `object({name=string})`   |
 | Tuple    | A sequence of values of different types | `tuple([string, number])` |
 
+- Worth noting with a list, that if you request an item in the list that is higher than the number of items in the list (i.e. value = element(var.users, 4)) when there are only 3 items in the list, it won't throw an error, instead it will be like it keeps wrapping round the list
+
 ## Outputs
 
 - Output variables display values in the shell after running `terraform apply`.
