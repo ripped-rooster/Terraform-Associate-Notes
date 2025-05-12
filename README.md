@@ -83,6 +83,7 @@ This repository contains notes for the HashiCorp Certified: Terraform Associate 
 - Reads the code and creates a "plan" of execution or deployment.
 - This command does not deploy anything; it is considered a read-only command.
 - Allows users to review the action plan before executing any changes.
+- determines what actions are necessary to achieve the desired state by evaluating the difference between the CONFIGURATION file and the STATE file
 
 ### Terraform Apply
 
@@ -111,6 +112,7 @@ This repository contains notes for the HashiCorp Certified: Terraform Associate 
 
 ### Terraform Providers
 
+- A provider is responsible for understanding API interactions with infrastructure providers
 - Providers are Terraform’s way of abstracting integrations with the API control layer of infrastructure vendors.
 - By default, Terraform looks for providers in the Terraform Providers Registry ([Terraform Providers Registry](https://registry.terraform.io/browse/providers)).
 - Providers are plugins released independently of Terraform's core software, with their own versioning.
@@ -164,6 +166,9 @@ data "<PROVIDER>_<DATA_SOURCE_TYPE>" "<NAME>" {
 - Stored in flat files, typically named `terraform.tfstate`.
 - Helps Terraform calculate deployment deltas and create new deployment plans.
 - It's crucial not to lose your Terraform state file.
+- Terraform uses the state to map configurations to resources in the real world.
+- Terraform uses the state to track metadata, such as resource dependencies.
+- Terraform stores a cache of the attribute values for all resources in the state for performance improvement.
 
 ### Local State Storage
 
@@ -208,6 +213,16 @@ These commands are used to manipulate and interact with the Terraform state file
 - **Bool**: Represents true or false values.
 
 - When declaring a variable, you do not need to assign a type, but if you do, the default must match
+
+### Variable Definition Precedence
+
+- Terraform loads variables in the following order, with later sources taking precedence over earlier ones:
+
+- Environment variables
+- The terraform.tfvars file, if present.
+- The terraform.tfvars.json file, if present.
+- Any *.auto.tfvars or *.auto.tfvars.json files, processed in lexical order of their filenames.
+- Any -var and -var-file options on the command line, in the order they are provided. (This includes variables set by a Terraform Cloud workspace.)
 
 ### Sensitive Variables
 
@@ -587,6 +602,11 @@ Example output:
 - Enforcing CIS (Center for Internet Security) standards across AWS accounts.
 - Restricting instance types to only allow `t3.micro`.
 - Ensuring security groups do not permit traffic on port 22.
+- Sentinel is the recommended way to ensure any S3 buckets have encryption enabled
+
+### When does Terraform perform Sentinel policy checks?
+
+- Sentinel policy checks occur after Terraform completes the plan and after both run tasks and cost estimation.
 
 ### HasiCorp Vault
 
@@ -629,6 +649,10 @@ Example output:
   - Remote state management and CLI integration.
   - Private Terraform module registry.
   - Features like cost estimation and Sentinel integration.
+ 
+## Only available in Enterprise Edition
+- Log forwarding
+- Cross-organisation registry sharing
 
 | Feature                       | HashiCorp Cloud Platform (HCP)                                      | Local State                                                       | External State                                                                       |
 | ----------------------------- | ------------------------------------------------------------------- | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
