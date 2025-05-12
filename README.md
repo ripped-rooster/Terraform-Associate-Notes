@@ -192,6 +192,11 @@ These commands are used to manipulate and interact with the Terraform state file
 | `terraform state push`             | Uploads a local state file to the configured remote state location | Used to manually synchronize the local state with remote state |
 | `terraform state replace-provider` | Replaces provider references in the state file                     | Useful when changing providers or their versions               |
 
+### Terraform Lock Files
+
+- A terraform lock file (terraform.lock.hcl) locks the terraform provider versions your configuration depends on.  Ensures consistent versions across teams or CI/CD envs
+- A terraform state lock prevents more than 1 person at a time changing configuration in the state file
+
 ## Variables
 
 ### Base Types
