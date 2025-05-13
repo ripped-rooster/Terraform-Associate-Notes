@@ -229,6 +229,7 @@ These commands are used to manipulate and interact with the Terraform state file
 - Sensitive variables are used to handle sensitive information such as passwords, API keys, or any confidential data. Marking a variable as sensitive prevents its value from being displayed in the Terraform output logs, thus helping to secure sensitive data.
 - **Usage**: Use the `sensitive` argument to mark a variable as sensitive.
 - Should be noted that a provider error could still expose sensitive data if the value is included in the error message
+- You can add a `sensitive = true` to output variables to prevent them being shown in the plan and apply windows, but they will show in the state
 
 ```hcl
 variable "db_password" {
