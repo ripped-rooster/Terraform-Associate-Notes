@@ -328,6 +328,7 @@ resource "aws_instance" "example" {
   }
 }
 ```
+- Null_Resource IS NOT a provisioner
 
 ## Terraform Modules
 
