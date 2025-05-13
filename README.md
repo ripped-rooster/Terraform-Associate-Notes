@@ -347,7 +347,7 @@ resource "aws_instance" "example" {
   - `for_each`
   - `providers`
   - `depends_on`
-  - 
+  
 ### Module Versioning
 
 - Local modules can't have version because the version is in the code, only registry modules have versions
@@ -366,7 +366,7 @@ resource "aws_instance" "example" {
 ### Private Registry Modules
 
 - Private registry modules have source strings of the form <HOSTNAME>/<NAMESPACE>/<NAME>/<PROVIDER>. This is the same format as the public registry, but with an added hostname prefix.
-- To access a module in a separaet private git repository, you need to use `git::` - these are the syntax options:
+- To access a module in a separate private git repository, you need to use `git::` - these are the syntax options:
 ```hcl
 module "instances" {
   source = "git::ssh://username@code.quizexperts.com:instances.git"
