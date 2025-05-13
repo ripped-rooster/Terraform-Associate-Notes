@@ -354,7 +354,7 @@ resource "aws_instance" "example" {
 
 - Modules can take input and provide output to integrate with the main code.
 - Local modules source address must begin with ./ or ../ to avoid confusion with a registry path
-- Variables must be explicitly declared in the module definition fromthe root module
+- Variables must be explicitly declared in the module definition from the root module
 - Providers only need to be explicitly declared if using aliases - default provider is implicitly inherited
 
 ### Declaring Modules in Code
