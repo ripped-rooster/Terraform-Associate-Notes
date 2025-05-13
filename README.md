@@ -378,7 +378,7 @@ module "vpc" {
 
 ### Public Registry Modules
 
-- Module GitHub repositories must use this three-part name format: terraform-<PROVIDER>-<NAME>, where the <NAME> segment can contain additional hyphens.
+- Module GitHub repositories must use this three-part name format: `terraform-<PROVIDER>-<NAME>`, where the `<NAME>` segment can contain additional hyphens.
 - The module must be on a public GitHub repo with at least one release tag in x.y.z format.
 
 ### Terraform Module Outputs
