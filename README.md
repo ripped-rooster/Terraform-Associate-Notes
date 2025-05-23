@@ -57,6 +57,12 @@ This repository contains notes for the HashiCorp Certified: Terraform Associate 
 - **Declare Your Infrastructure**: Infrastructure is typically written declaratively via code but can be procedural (imperative) too.
 - **Speed, Cost, and Reduced Risk**: Less human intervention during deployment reduces chances of security flaws, unnecessary resources, and saves time.
 
+## Terraform details
+
+- Immutable
+- Declarative
+- Can be written in HCL or even JSON
+
 ## Terraform Workflow
 
 1. **Write Your Terraform Code**
