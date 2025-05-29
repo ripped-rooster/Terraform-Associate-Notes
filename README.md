@@ -650,7 +650,7 @@ Examples of Terraform built-in functions:
 - Sentinel and OPA help you manage infrastructure costs pro-actively.
 - Sentinel and OPA help you implement policies as code.
 - Sentinel and OPA help you automatically enforce security practices and governance throughout your IaC workflow.
-- Sentinel DOES NOT run at the provider leve
+- Sentinel DOES NOT run at the provider level
 
 ### When does Terraform perform Sentinel policy checks?
 
