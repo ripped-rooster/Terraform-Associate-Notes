@@ -229,6 +229,7 @@ These commands are used to manipulate and interact with the Terraform state file
 - A terraform state lock prevents more than 1 person at a time changing configuration in the state file
 - if you update the Terraform configuration with a provider version that does not match the .terraform.lock.hcl, an error will be thrown when you attempt to initialise Terraform.
 - You can also use the -upgrade flag to downgrade/upgrade the provider versions if the version constraints are modified to specify a provider version specified in your configuration.
+- Terraform automatically creates or updates the dependency lock file each time you run the `terraform init` command.
 
 ## Variables
 
@@ -535,6 +536,7 @@ Examples of Terraform built-in functions:
 - **Scenarios**:
   - Checking for syntax errors before running `terraform plan` or `terraform apply`.
   - Validating configurations after making changes or updates.
+- `terraform validate` does not hold a lock on the state
 
 ### Terraform show
 
@@ -709,6 +711,7 @@ Example output:
   - Private Terraform module registry.
   - Features like cost estimation and Sentinel integration.
   - To use the standard CLI tools to execute runs in Terraform Cloud, use either a user token or a team token for command-line Terraform actions
+  - Terraform Cloud allows you to set and enforce restrictions that prohibit infrastructure deployments on specific days of the week.
  
   - Organization API tokens are not recommended as an all-purpose interface to Terraform Cloud.
   - When using the VCS-driven workflow for Terraform Cloud, you DO NOT need to define the cloud block in your configuration.
