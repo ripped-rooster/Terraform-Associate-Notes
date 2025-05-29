@@ -90,7 +90,7 @@ This repository contains notes for the HashiCorp Certified: Terraform Associate 
 - This command does not deploy anything; it is considered a read-only command.
 - Allows users to review the action plan before executing any changes.
 - determines what actions are necessary to achieve the desired state by evaluating the difference between the CONFIGURATION file and the STATE file
-- Terraform determine the backend configuration when you apply a plan that you have already saved to a file by using the backend configuration stored in that plan file
+- Terraform determines the backend configuration when you apply a plan that you have already saved to a file, by using the backend configuration stored in that plan file
 
 ### Terraform Apply
 
