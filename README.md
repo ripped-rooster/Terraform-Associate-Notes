@@ -90,11 +90,13 @@ This repository contains notes for the HashiCorp Certified: Terraform Associate 
 - This command does not deploy anything; it is considered a read-only command.
 - Allows users to review the action plan before executing any changes.
 - determines what actions are necessary to achieve the desired state by evaluating the difference between the CONFIGURATION file and the STATE file
+- Terraform determine the backend configuration when you apply a plan that you have already saved to a file by using the backend configuration stored in that plan file
 
 ### Terraform Apply
 
 - Deploys the instructions and statements defined in the code.
 - Updates the deployment state tracking mechanism, known as the "state file."
+- if `ignore_changes` is set to true on a resource, terraform apply will not revert back changes made manually to that resource in the console
 
 ### Terraform Destroy
 
@@ -175,12 +177,15 @@ data "<PROVIDER>_<DATA_SOURCE_TYPE>" "<NAME>" {
 - Terraform uses the state to map configurations to resources in the real world.
 - Terraform uses the state to track metadata, such as resource dependencies.
 - Terraform stores a cache of the attribute values for all resources in the state for performance improvement.
+- Terraform forces every state modification command to write a backup file.
+- Use the `terraform_remote_state` data source to use another Terraform workspace's output data to get region information.
 
 ### Local State Storage
 
 - Saves the Terraform state file locally on your system.
 - This is Terraform's default behavior.
 - Local state is stored in plain text JSON files
+- Local state files cannot be unlocked by another process.
 
 ### Remote State Storage
 
@@ -190,6 +195,17 @@ data "<PROVIDER>_<DATA_SOURCE_TYPE>" "<NAME>" {
 - Enables state locking to prevent coinciding parallel executions.
 - Supports sharing "output" values with other Terraform configurations or code.
 - Remote state can provide better security as it is only held in memory and CAN be encrypted at rest
+- Remote state allows teams to share infrastructure resources in a read-only way without relying on any additional configuration store.
+
+### Backend blocks
+
+- These important limitations apply to backend configuration:
+  - A configuration can only provide one backend block.
+  - A backend block cannot refer to named values.
+- You have to run terraform init every time you change a backend's configuration.
+- If you change the backend's configuration, Terraform can copy all workspaces to the destination backend.
+- Even if you are just reconfiguring the same backend, you still have to run terraform init every time.
+- Terraform no longer supports the artifactory, etcd, etcdv3, manta, and swift backends
 
 ### Terraform State Commands
 
@@ -205,10 +221,14 @@ These commands are used to manipulate and interact with the Terraform state file
 | `terraform state push`             | Uploads a local state file to the configured remote state location | Used to manually synchronize the local state with remote state |
 | `terraform state replace-provider` | Replaces provider references in the state file                     | Useful when changing providers or their versions               |
 
+- Using terraform state rm to remove an item from the state DOES NOT remove any output values from the state file
+
 ### Terraform Lock Files
 
 - A terraform lock file (terraform.lock.hcl) locks the terraform provider versions your configuration depends on.  Ensures consistent versions across teams or CI/CD envs
 - A terraform state lock prevents more than 1 person at a time changing configuration in the state file
+- if you update the Terraform configuration with a provider version that does not match the .terraform.lock.hcl, an error will be thrown when you attempt to initialise Terraform.
+- You can also use the -upgrade flag to downgrade/upgrade the provider versions if the version constraints are modified to specify a provider version specified in your configuration.
 
 ## Variables
 
@@ -235,7 +255,7 @@ These commands are used to manipulate and interact with the Terraform state file
 - Sensitive variables are used to handle sensitive information such as passwords, API keys, or any confidential data. Marking a variable as sensitive prevents its value from being displayed in the Terraform output logs, thus helping to secure sensitive data.
 - **Usage**: Use the `sensitive` argument to mark a variable as sensitive.
 - Should be noted that a provider error could still expose sensitive data if the value is included in the error message
-- You can add a `sensitive = true` to output variables to prevent them being shown in the plan and apply windows, but they will show in the state
+- You can add a `sensitive = true` to output variables to prevent them being shown in the plan and apply windows, but they will show in the state.  Also worth noting, when you query a specific output by name in Terraform, it will send the result to the console without redacting any sensitive outputs.
 
 ```hcl
 variable "db_password" {
@@ -282,11 +302,13 @@ variable "port" {
 | Tuple    | A sequence of values of different types | `tuple([string, number])` |
 
 - Worth noting with a list, that if you request an item in the list that is higher than the number of items in the list (i.e. value = element(var.users, 4)) when there are only 3 items in the list, it won't throw an error, instead it will be like it keeps wrapping round the list
+- To get the value from a map, it is the same syntax as a list, square brackets - i.e. var.ami_map["us-east-1"]
 
 ## Outputs
 
 - Output variables display values in the shell after running `terraform apply`.
 - Output values act like return values you want to track after a successful Terraform deployment.
+- Use of `depends_on` - sometimes dependencies exist that Terraform is unable to implicitly detect from a value expression for an output value. In these situations, you can define more explicit dependencies using the depends_on parameter.
 
 ## Terraform Provisioners
 
@@ -340,6 +362,7 @@ resource "aws_instance" "example" {
 
 - A module is a container for multiple resources used together.
 - Every Terraform configuration has at least one module, known as the root module, consisting of code files in the main working directory.
+- Provider configurations can be defined only in a root Terraform module.
 
 ### Accessing Terraform Modules
 
@@ -397,7 +420,7 @@ module "vpc" {
 
 - If you have a module in a registry and you want to test and changes, you can do this without merging it to main and can test the module branch first
 - Using the source : `module.<name-of-module>.<name-of-output>`
-- Output convention for nested modules: `module.<name-of-module>.module.<name-of-nested-module>.<name-of-output>`
+- Output convention for nested modules: `module.<name-of-module>.module.<name-of-nested-module>.<resource_type>.<name-of-output>`
 
 
 ## Terraform Built-in Functions
@@ -503,6 +526,7 @@ Examples of Terraform built-in functions:
   - When creation of new resources is not permitted.
   - When not in control of the initial infrastructure creation process.
   - IMPORTANT - Not all providers and resources support Terraform import.
+  - You can import resources into modules as well as the root
 
 ### Terraform validate
 
@@ -527,6 +551,7 @@ Examples of Terraform built-in functions:
 - **Scenarios**:
   - Visualizing resource dependencies and relationships.
   - Identifying potential circular dependencies or complex infrastructure layouts.
+- This produces a file in DOT format
 
 Example output:
 ![graph](./assets/graph.png)
@@ -538,6 +563,10 @@ Example output:
 - **Scenarios**:
   - Accessing the values of output variables after applying changes.
   - Using output values for further automation or integration with other systems.
+
+### Terraform providers
+
+- The terraform providers command prints information about the providers used in the current configuration.
 
 ### Terraform refresh
 
@@ -554,6 +583,10 @@ Example output:
 - **Scenarios**:
   - Testing expressions and interpolations before using them in configurations.
   - Exploring variable values and outputs interactively.
+- The Terraform console holds a lock on the state, and you will not be able to use the console while performing other actions that modify the state.
+
+### Terraform CLI commands
+
 
 ## Terraform Configuration Block
 
@@ -593,6 +626,10 @@ Example output:
   - `export TF_LOG=TRACE`
   - `export TF_LOG_PATH=./terraform.log`
 
+## Environment Variables
+- `TF_CLI_ARGS="-no-color"` - stops color appearing in the output
+- `TF_CLI_ARGS_name="-no-color"` - stops color in specific phases, such as `TF_CLI_ARGS_plan="` or `TF_CLI_ARGS_apply="`
+
 ## Terraform Cloud and Enterprise Offerings
 
 ### Hashicorp Sentinel
@@ -611,6 +648,10 @@ Example output:
 - Restricting instance types to only allow `t3.micro`.
 - Ensuring security groups do not permit traffic on port 22.
 - Sentinel is the recommended way to ensure any S3 buckets have encryption enabled
+- Sentinel and OPA help you manage infrastructure costs pro-actively.
+- Sentinel and OPA help you implement policies as code.
+- Sentinel and OPA help you automatically enforce security practices and governance throughout your IaC workflow.
+- Sentinel DOES NOT run at the provider leve
 
 ### When does Terraform perform Sentinel policy checks?
 
@@ -632,7 +673,14 @@ Example output:
   - Publish and share custom modules.
   - Collaborate with contributors on provider and module development.
   - Directly reference modules in Terraform code.
+  - Both Terrafrom Enterprise and Terraform Cloud provide a Private Registry option
 
+### Terraform Private Registry
+- It provides a searchable marketplace to help users find the components they need.
+- It can generate boilerplate code in a module-centric Terraform workflow.
+- It automatically generates supporting documentation and examples for your modules.
+- Terraform Cloud Private Registry allows you to share modules within an organisation, but you need Terraform Enterprise to share across organisations.
+  
 ### Terraform Cloud Workspaces
 
 - **Definition**: Workspaces hosted in Terraform Cloud.
@@ -640,6 +688,9 @@ Example output:
   - Stores old versions of state files by default.
   - Maintains a record of all execution activities.
   - All Terraform commands are executed on managed Terraform Cloud VMs.
+  - They are a major component of role-based access in Terraform Cloud.
+  - They represent collections of infrastructure in an organization.
+  - You cannot manage resources in Terraform Cloud without creating at least one workspace.
 
 ![Terraform Cloud Folder](./assets/tf-cloud.png)
 
@@ -657,6 +708,24 @@ Example output:
   - Remote state management and CLI integration.
   - Private Terraform module registry.
   - Features like cost estimation and Sentinel integration.
+  - To use the standard CLI tools to execute runs in Terraform Cloud, use either a user token or a team token for command-line Terraform actions
+ 
+  - Organization API tokens are not recommended as an all-purpose interface to Terraform Cloud.
+  - When using the VCS-driven workflow for Terraform Cloud, you DO NOT need to define the cloud block in your configuration.
+  - The `cloud` configuration block is required to enable the CLI-driven workflow in Terraform Cloud
+ 
+- Not available in free version of HCP
+  - Versioned policy sets
+  - Roles/Team Management
+  - Drift detection
+
+## Terraform Enterprise
+
+- Terraform does not need internet access to download provider plugins.
+- These features are only available with Terraform Enterprise:
+  - Application-level logging
+  - Air gap network deployment
+  - Runtime metrics (Prometheus)
  
 ## Only available in Enterprise Edition
 - Log forwarding
