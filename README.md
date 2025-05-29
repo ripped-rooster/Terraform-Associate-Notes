@@ -726,10 +726,8 @@ Examples of Terraform built-in functions:
   - Application-level logging
   - Air gap network deployment
   - Runtime metrics (Prometheus)
- 
-## Only available in Enterprise Edition
-- Log forwarding
-- Cross-organisation registry sharing
+  - Log forwarding
+  - Cross-organisation registry sharing
 
 | Feature                       | HashiCorp Cloud Platform (HCP)                                      | Local State                                                       | External State                                                                       |
 | ----------------------------- | ------------------------------------------------------------------- | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
