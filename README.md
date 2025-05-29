@@ -98,10 +98,102 @@ This repository contains notes for the HashiCorp Certified: Terraform Associate 
 - Updates the deployment state tracking mechanism, known as the "state file."
 - if `ignore_changes` is set to true on a resource, terraform apply will not revert back changes made manually to that resource in the console
 
+### Terraform apply -replace
+
+> previously known as `taint` and `untaint` commands before Terraform v0.12
+
+- **Purpose**: Replaces a resource by first destroying it and then creating a new one. This is useful when a resource needs to be recreated due to issues or changes.
+- **CLI Command**: `terraform apply -replace="RESOURCE_ADDRESS"`
+- **Scenarios**:
+  - To force the recreation of a misbehaving or corrupted resource.
+  - To ensure provisioners or other lifecycle operations run again.
+  - To simulate the side effects of recreation not triggered by attribute changes.
+
 ### Terraform Destroy
 
 - Looks at the recorded state file and destroys all resources created by the code.
 - This is a non-reversible command, so use it with caution. Backups are recommended.
+
+### Terraform fmt
+
+- **Purpose**: Formats Terraform code for readability and ensures consistent styling across the codebase.
+- **Usage**: Safe to run at any time to maintain code quality.
+- **CLI Command**: `terraform fmt`
+- **Scenarios**:
+  - Before pushing code to version control.
+  - After upgrading Terraform or its modules.
+  - Any time code changes are made.
+
+### Terraform import
+
+- **Purpose**: Maps existing resources to Terraform using a resource-specific identifier (ID).
+- **CLI Command**: `terraform import RESOURCE_ADDRESS ID`
+- **Scenarios**:
+  - When needing to manage existing resources not originally created by Terraform.
+  - When creation of new resources is not permitted.
+  - When not in control of the initial infrastructure creation process.
+  - IMPORTANT - Not all providers and resources support Terraform import.
+  - You can import resources into modules as well as the root
+
+### Terraform validate
+
+- **Purpose**: Validates the syntax and internal consistency of Terraform configuration files.
+- **CLI Command**: `terraform validate`
+- **Scenarios**:
+  - Checking for syntax errors before running `terraform plan` or `terraform apply`.
+  - Validating configurations after making changes or updates.
+- `terraform validate` does not hold a lock on the state
+
+### Terraform show
+
+- **Purpose**: Provides a human-readable output of the Terraform state or plan file.
+- **CLI Command**: `terraform show`
+- **Scenarios**:
+  - Reviewing the current state of resources in detail.
+  - Examining the execution plan to understand changes before applying them.
+
+### Terraform graph
+
+- **Purpose**: Creates a visual representation of Terraform resources and their dependencies.
+- **CLI Command**: `terraform graph | dot -Tpng > graph.png`
+- **Scenarios**:
+  - Visualizing resource dependencies and relationships.
+  - Identifying potential circular dependencies or complex infrastructure layouts.
+- This produces a file in DOT format
+
+Example output:
+![graph](./assets/graph.png)
+
+### Terraform output
+
+- **Purpose**: Retrieves the values of output variables from the Terraform state.
+- **CLI Command**: `terraform output [NAME]`
+- **Scenarios**:
+  - Accessing the values of output variables after applying changes.
+  - Using output values for further automation or integration with other systems.
+
+### Terraform providers
+
+- The terraform providers command prints information about the providers used in the current configuration.
+
+### Terraform refresh
+
+- **Purpose**: Updates the Terraform state to match the real-world resources without modifying any infrastructure.
+- **CLI Command**: `terraform refresh`
+- **Scenarios**:
+  - Refreshing the state file to reflect changes made outside of Terraform.
+  - Verifying that the state file is in sync with the actual infrastructure.
+
+### Terraform console
+
+- **Purpose**: Provides an interactive console for evaluating expressions and exploring Terraform functions.
+- **CLI Command**: `terraform console`
+- **Scenarios**:
+  - Testing expressions and interpolations before using them in configurations.
+  - Exploring variable values and outputs interactively.
+- The Terraform console holds a lock on the state, and you will not be able to use the console while performing other actions that modify the state.
+
+### Terraform CLI commands  
 
 ## Installing Terraform
 
@@ -494,101 +586,6 @@ Examples of Terraform built-in functions:
 - **Usage**: Dynamic blocks make your code cleaner by reducing redundancy. They act like a for loop, outputting a nested block for each element in a complex variable type.
 
 - **Caution**: Overuse of dynamic blocks can make code hard to read and maintain. Use them to build a cleaner user interface when writing reusable modules.
-
-## Additional Terraform Commands
-
-### Terraform fmt
-
-- **Purpose**: Formats Terraform code for readability and ensures consistent styling across the codebase.
-- **Usage**: Safe to run at any time to maintain code quality.
-- **CLI Command**: `terraform fmt`
-- **Scenarios**:
-  - Before pushing code to version control.
-  - After upgrading Terraform or its modules.
-  - Any time code changes are made.
-
-### Terraform apply -replace
-
-> previously known as `taint` and `untaint` commands before Terraform v0.12
-
-- **Purpose**: Replaces a resource by first destroying it and then creating a new one. This is useful when a resource needs to be recreated due to issues or changes.
-- **CLI Command**: `terraform apply -replace="RESOURCE_ADDRESS"`
-- **Scenarios**:
-  - To force the recreation of a misbehaving or corrupted resource.
-  - To ensure provisioners or other lifecycle operations run again.
-  - To simulate the side effects of recreation not triggered by attribute changes.
-
-### Terraform import
-
-- **Purpose**: Maps existing resources to Terraform using a resource-specific identifier (ID).
-- **CLI Command**: `terraform import RESOURCE_ADDRESS ID`
-- **Scenarios**:
-  - When needing to manage existing resources not originally created by Terraform.
-  - When creation of new resources is not permitted.
-  - When not in control of the initial infrastructure creation process.
-  - IMPORTANT - Not all providers and resources support Terraform import.
-  - You can import resources into modules as well as the root
-
-### Terraform validate
-
-- **Purpose**: Validates the syntax and internal consistency of Terraform configuration files.
-- **CLI Command**: `terraform validate`
-- **Scenarios**:
-  - Checking for syntax errors before running `terraform plan` or `terraform apply`.
-  - Validating configurations after making changes or updates.
-- `terraform validate` does not hold a lock on the state
-
-### Terraform show
-
-- **Purpose**: Provides a human-readable output of the Terraform state or plan file.
-- **CLI Command**: `terraform show`
-- **Scenarios**:
-  - Reviewing the current state of resources in detail.
-  - Examining the execution plan to understand changes before applying them.
-
-### Terraform graph
-
-- **Purpose**: Creates a visual representation of Terraform resources and their dependencies.
-- **CLI Command**: `terraform graph | dot -Tpng > graph.png`
-- **Scenarios**:
-  - Visualizing resource dependencies and relationships.
-  - Identifying potential circular dependencies or complex infrastructure layouts.
-- This produces a file in DOT format
-
-Example output:
-![graph](./assets/graph.png)
-
-### Terraform output
-
-- **Purpose**: Retrieves the values of output variables from the Terraform state.
-- **CLI Command**: `terraform output [NAME]`
-- **Scenarios**:
-  - Accessing the values of output variables after applying changes.
-  - Using output values for further automation or integration with other systems.
-
-### Terraform providers
-
-- The terraform providers command prints information about the providers used in the current configuration.
-
-### Terraform refresh
-
-- **Purpose**: Updates the Terraform state to match the real-world resources without modifying any infrastructure.
-- **CLI Command**: `terraform refresh`
-- **Scenarios**:
-  - Refreshing the state file to reflect changes made outside of Terraform.
-  - Verifying that the state file is in sync with the actual infrastructure.
-
-### Terraform console
-
-- **Purpose**: Provides an interactive console for evaluating expressions and exploring Terraform functions.
-- **CLI Command**: `terraform console`
-- **Scenarios**:
-  - Testing expressions and interpolations before using them in configurations.
-  - Exploring variable values and outputs interactively.
-- The Terraform console holds a lock on the state, and you will not be able to use the console while performing other actions that modify the state.
-
-### Terraform CLI commands
-
 
 ## Terraform Configuration Block
 
