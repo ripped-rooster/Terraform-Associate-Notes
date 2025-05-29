@@ -449,7 +449,7 @@ resource "aws_instance" "example" {
   }
 }
 ```
-- Null_Resource IS NOT a provisioner
+- Null_Resource IS NOT a provisioner, however with a provisioner defined on a null_resource, you can run your scripts as part of the Terraform life cycle without being attached to any "real" resource.
 
 ## Terraform Modules
 
