@@ -123,6 +123,7 @@ This repository contains notes for the HashiCorp Certified: Terraform Associate 
   - Before pushing code to version control.
   - After upgrading Terraform or its modules.
   - Any time code changes are made.
+- terraform fmt -check is a read operation and highlights which files will be changed
 
 ### Terraform import
 
@@ -722,6 +723,11 @@ Examples of Terraform built-in functions:
 ## Terraform Enterprise
 
 - Terraform does not need internet access to download provider plugins.
+- Benefits:
+  - SSO
+  - Auditing
+  - Private Data Center Networking
+  - Clustering
 - These features are only available with Terraform Enterprise:
   - Application-level logging
   - Air gap network deployment
